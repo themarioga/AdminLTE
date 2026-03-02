@@ -207,44 +207,52 @@ class CardWidget {
 }
 
 /**
+ * Initialization method
+ */
+
+export function initCardWidget(): void {
+  const collapseBtn = document.querySelectorAll(SELECTOR_DATA_COLLAPSE);
+
+  collapseBtn.forEach((btn) => {
+    btn.addEventListener('click', (event) => {
+      event.preventDefault();
+      const target = event.target as HTMLElement;
+      const data = new CardWidget(target, Default);
+      data.toggle();
+    });
+  });
+
+  const removeBtn = document.querySelectorAll(SELECTOR_DATA_REMOVE);
+
+  removeBtn.forEach((btn) => {
+    btn.addEventListener('click', (event) => {
+      event.preventDefault();
+      const target = event.target as HTMLElement;
+      const data = new CardWidget(target, Default);
+      data.remove();
+    });
+  });
+
+  const maxBtn = document.querySelectorAll(SELECTOR_DATA_MAXIMIZE);
+
+  maxBtn.forEach((btn) => {
+    btn.addEventListener('click', (event) => {
+      event.preventDefault();
+      const target = event.target as HTMLElement;
+      const data = new CardWidget(target, Default);
+      data.toggleMaximize();
+    });
+  });
+}
+
+/**
  *
  * Data Api implementation
  * ====================================================
  */
 
 onDOMContentLoaded(() => {
-  const collapseBtn = document.querySelectorAll(SELECTOR_DATA_COLLAPSE)
-
-  collapseBtn.forEach(btn => {
-    btn.addEventListener('click', event => {
-      event.preventDefault()
-      const target = event.target as HTMLElement
-      const data = new CardWidget(target, Default)
-      data.toggle()
-    })
-  })
-
-  const removeBtn = document.querySelectorAll(SELECTOR_DATA_REMOVE)
-
-  removeBtn.forEach(btn => {
-    btn.addEventListener('click', event => {
-      event.preventDefault()
-      const target = event.target as HTMLElement
-      const data = new CardWidget(target, Default)
-      data.remove()
-    })
-  })
-
-  const maxBtn = document.querySelectorAll(SELECTOR_DATA_MAXIMIZE)
-
-  maxBtn.forEach(btn => {
-    btn.addEventListener('click', event => {
-      event.preventDefault()
-      const target = event.target as HTMLElement
-      const data = new CardWidget(target, Default)
-      data.toggleMaximize()
-    })
-  })
+  initCardWidget();
 })
 
 export default CardWidget

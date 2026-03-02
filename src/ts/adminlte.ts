@@ -1,10 +1,15 @@
 import { onDOMContentLoaded } from './util/index.js'
 import Layout from './layout.js'
 import CardWidget from './card-widget.js'
+import { initCardWidget } from './card-widget.js';
 import Treeview from './treeview.js'
+import { initTreeview } from './treeview.js';
 import DirectChat from './direct-chat.js'
+import { initDirectChat } from './direct-chat.js';
 import FullScreen from './fullscreen.js'
+import { initFullScreen } from './fullscreen.js';
 import PushMenu from './push-menu.js'
+import { initPushMenu } from './push-menu.js';
 import { initAccessibility } from './accessibility.js'
 
 /**
@@ -21,7 +26,7 @@ onDOMContentLoaded(() => {
    */
   const layout = new Layout(document.body)
   layout.holdTransition()
-  
+
   /**
    * Initialize Accessibility Features - WCAG 2.1 AA Compliance
    * --------------------------------------------------------
@@ -33,10 +38,10 @@ onDOMContentLoaded(() => {
     keyboardNavigation: true,
     reducedMotion: true
   })
-  
+
   // Add semantic landmarks
   accessibilityManager.addLandmarks()
-  
+
   // Mark app as loaded after initialization
   setTimeout(() => {
     document.body.classList.add('app-loaded')
@@ -50,5 +55,10 @@ export {
   DirectChat,
   FullScreen,
   PushMenu,
+  initCardWidget,
+  initTreeview,
+  initDirectChat,
+  initFullScreen,
+  initPushMenu,
   initAccessibility
 }

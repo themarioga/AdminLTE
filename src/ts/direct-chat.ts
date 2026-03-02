@@ -54,26 +54,34 @@ class DirectChat {
 }
 
 /**
+ * Initialization method
+ */
+
+export function initDirectChat(): void {
+  const button = document.querySelectorAll(SELECTOR_DATA_TOGGLE);
+
+  button.forEach((btn) => {
+    btn.addEventListener('click', (event) => {
+      event.preventDefault();
+      const target = event.target as HTMLElement;
+      const chatPane = target.closest(SELECTOR_DIRECT_CHAT) as HTMLElement | undefined;
+
+      if (chatPane) {
+        const data = new DirectChat(chatPane);
+        data.toggle();
+      }
+    });
+  });
+}
+
+/**
  *
  * Data Api implementation
  * ====================================================
  */
 
 onDOMContentLoaded(() => {
-  const button = document.querySelectorAll(SELECTOR_DATA_TOGGLE)
-
-  button.forEach(btn => {
-    btn.addEventListener('click', event => {
-      event.preventDefault()
-      const target = event.target as HTMLElement
-      const chatPane = target.closest(SELECTOR_DIRECT_CHAT) as HTMLElement | undefined
-
-      if (chatPane) {
-        const data = new DirectChat(chatPane)
-        data.toggle()
-      }
-    })
-  })
+  initDirectChat();
 })
 
 export default DirectChat

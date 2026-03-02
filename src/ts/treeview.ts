@@ -106,59 +106,67 @@ class Treeview {
 }
 
 /**
+ * Initialization method
+ */
+
+export function initTreeview(): void {
+  const openMenuItems = document.querySelectorAll(`${SELECTOR_NAV_ITEM}.${CLASS_NAME_MENU_OPEN}`);
+
+  openMenuItems.forEach((menuItem) => {
+    const childElement = menuItem.querySelector(SELECTOR_TREEVIEW_MENU) as HTMLElement | undefined;
+    if (childElement) {
+      slideDown(childElement, 0);
+      const event = new Event(EVENT_LOAD_DATA_API);
+      menuItem.dispatchEvent(event);
+    }
+  });
+
+  const button = document.querySelectorAll(SELECTOR_DATA_TOGGLE);
+
+  button.forEach((btn) => {
+    btn.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      const targetItem = target.closest(SELECTOR_NAV_ITEM) as HTMLElement | undefined;
+      const targetLink = target.closest(SELECTOR_NAV_LINK) as HTMLAnchorElement | undefined;
+      const targetTreeviewMenu = targetItem?.querySelector(SELECTOR_TREEVIEW_MENU) as
+        | HTMLElement
+        | undefined;
+      const lteToggleElement = event.currentTarget as HTMLElement;
+
+      if (!targetTreeviewMenu) {
+        return;
+      }
+
+      if (target?.getAttribute('href') === '#' || targetLink?.getAttribute('href') === '#') {
+        event.preventDefault();
+      }
+
+      if (targetItem) {
+        const accordionAttr = lteToggleElement.dataset.accordion;
+        const animationSpeedAttr = lteToggleElement.dataset.animationSpeed;
+
+        const config: Config = {
+          accordion: accordionAttr === undefined ? Default.accordion : accordionAttr === 'true',
+          animationSpeed:
+            animationSpeedAttr === undefined ? Default.animationSpeed : Number(animationSpeedAttr)
+        };
+
+        const data = new Treeview(targetItem, config);
+        data.toggle();
+      }
+    });
+  });
+}
+
+
+/**
  * ------------------------------------------------------------------------
  * Data Api implementation
  * ------------------------------------------------------------------------
  */
 
 onDOMContentLoaded(() => {
-  const openMenuItems = document.querySelectorAll(`${SELECTOR_NAV_ITEM}.${CLASS_NAME_MENU_OPEN}`)
-
-  openMenuItems.forEach(menuItem => {
-    const childElement = menuItem.querySelector(SELECTOR_TREEVIEW_MENU) as HTMLElement | undefined
-    if (childElement) {
-      slideDown(childElement, 0)
-
-      const event = new Event(EVENT_LOAD_DATA_API)
-      menuItem.dispatchEvent(event)
-    }
-  })
-
-  const button = document.querySelectorAll(SELECTOR_DATA_TOGGLE)
-
-  button.forEach(btn => {
-    btn.addEventListener('click', event => {
-      const target = event.target as HTMLElement
-      const targetItem = target.closest(SELECTOR_NAV_ITEM) as HTMLElement | undefined
-      const targetLink = target.closest(SELECTOR_NAV_LINK) as HTMLAnchorElement | undefined
-      const targetTreeviewMenu = targetItem?.querySelector(SELECTOR_TREEVIEW_MENU) as HTMLElement | undefined
-      const lteToggleElement = event.currentTarget as HTMLElement
-
-      // Avoid creating Treeview instances on non menu elements
-      if (!targetTreeviewMenu) {
-        return
-      }
-
-      if (target?.getAttribute('href') === '#' || targetLink?.getAttribute('href') === '#') {
-        event.preventDefault()
-      }
-
-      if (targetItem) {
-        // Read data attributes
-        const accordionAttr = lteToggleElement.dataset.accordion
-        const animationSpeedAttr = lteToggleElement.dataset.animationSpeed
-
-        // Build config from data attributes, fallback to Default
-        const config: Config = {
-          accordion: accordionAttr === undefined ? Default.accordion : accordionAttr === 'true',
-          animationSpeed: animationSpeedAttr === undefined ? Default.animationSpeed : Number(animationSpeedAttr)
-        }
-
-        const data = new Treeview(targetItem, config)
-        data.toggle()
-      }
-    })
-  })
+  initTreeview();
 })
 
 export default Treeview

@@ -86,25 +86,33 @@ class FullScreen {
 }
 
 /**
+ * Initialization method
+ */
+
+export function initFullScreen(): void {
+  const buttons = document.querySelectorAll(SELECTOR_FULLSCREEN_TOGGLE);
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', (event) => {
+      event.preventDefault();
+
+      const target = event.target as HTMLElement;
+      const button = target.closest(SELECTOR_FULLSCREEN_TOGGLE) as HTMLElement | undefined;
+
+      if (button) {
+        const data = new FullScreen(button, undefined);
+        data.toggleFullScreen();
+      }
+    });
+  });
+}
+
+/**
  * Data Api implementation
  * ============================================================================
  */
 onDOMContentLoaded(() => {
-  const buttons = document.querySelectorAll(SELECTOR_FULLSCREEN_TOGGLE)
-
-  buttons.forEach(btn => {
-    btn.addEventListener('click', event => {
-      event.preventDefault()
-
-      const target = event.target as HTMLElement
-      const button = target.closest(SELECTOR_FULLSCREEN_TOGGLE) as HTMLElement | undefined
-
-      if (button) {
-        const data = new FullScreen(button, undefined)
-        data.toggleFullScreen()
-      }
-    })
-  })
+  initFullScreen();
 })
 
 export default FullScreen

@@ -1,6 +1,6 @@
 /*!
  * AdminLTE v4.0.0-rc6 (https://adminlte.io)
- * Copyright 2014-2025 Colorlib <https://colorlib.com>
+ * Copyright 2014-2026 Colorlib <https://colorlib.com>
  * Licensed under MIT (https://github.com/ColorlibHQ/AdminLTE/blob/master/LICENSE)
  */
 (function (global, factory) {
@@ -280,14 +280,12 @@
         }
     }
     /**
-     *
-     * Data Api implementation
-     * ====================================================
+     * Initialization method
      */
-    onDOMContentLoaded(() => {
+    function initCardWidget() {
         const collapseBtn = document.querySelectorAll(SELECTOR_DATA_COLLAPSE);
-        collapseBtn.forEach(btn => {
-            btn.addEventListener('click', event => {
+        collapseBtn.forEach((btn) => {
+            btn.addEventListener('click', (event) => {
                 event.preventDefault();
                 const target = event.target;
                 const data = new CardWidget(target, Default$1);
@@ -295,8 +293,8 @@
             });
         });
         const removeBtn = document.querySelectorAll(SELECTOR_DATA_REMOVE);
-        removeBtn.forEach(btn => {
-            btn.addEventListener('click', event => {
+        removeBtn.forEach((btn) => {
+            btn.addEventListener('click', (event) => {
                 event.preventDefault();
                 const target = event.target;
                 const data = new CardWidget(target, Default$1);
@@ -304,14 +302,22 @@
             });
         });
         const maxBtn = document.querySelectorAll(SELECTOR_DATA_MAXIMIZE);
-        maxBtn.forEach(btn => {
-            btn.addEventListener('click', event => {
+        maxBtn.forEach((btn) => {
+            btn.addEventListener('click', (event) => {
                 event.preventDefault();
                 const target = event.target;
                 const data = new CardWidget(target, Default$1);
                 data.toggleMaximize();
             });
         });
+    }
+    /**
+     *
+     * Data Api implementation
+     * ====================================================
+     */
+    onDOMContentLoaded(() => {
+        initCardWidget();
     });
 
     /**
@@ -392,13 +398,11 @@
         }
     }
     /**
-     * ------------------------------------------------------------------------
-     * Data Api implementation
-     * ------------------------------------------------------------------------
+     * Initialization method
      */
-    onDOMContentLoaded(() => {
+    function initTreeview() {
         const openMenuItems = document.querySelectorAll(`${SELECTOR_NAV_ITEM$1}.${CLASS_NAME_MENU_OPEN$1}`);
-        openMenuItems.forEach(menuItem => {
+        openMenuItems.forEach((menuItem) => {
             const childElement = menuItem.querySelector(SELECTOR_TREEVIEW_MENU);
             if (childElement) {
                 slideDown(childElement, 0);
@@ -407,14 +411,13 @@
             }
         });
         const button = document.querySelectorAll(SELECTOR_DATA_TOGGLE$1);
-        button.forEach(btn => {
-            btn.addEventListener('click', event => {
+        button.forEach((btn) => {
+            btn.addEventListener('click', (event) => {
                 const target = event.target;
                 const targetItem = target.closest(SELECTOR_NAV_ITEM$1);
                 const targetLink = target.closest(SELECTOR_NAV_LINK);
                 const targetTreeviewMenu = targetItem?.querySelector(SELECTOR_TREEVIEW_MENU);
                 const lteToggleElement = event.currentTarget;
-                // Avoid creating Treeview instances on non menu elements
                 if (!targetTreeviewMenu) {
                     return;
                 }
@@ -422,10 +425,8 @@
                     event.preventDefault();
                 }
                 if (targetItem) {
-                    // Read data attributes
                     const accordionAttr = lteToggleElement.dataset.accordion;
                     const animationSpeedAttr = lteToggleElement.dataset.animationSpeed;
-                    // Build config from data attributes, fallback to Default
                     const config = {
                         accordion: accordionAttr === undefined ? Default.accordion : accordionAttr === 'true',
                         animationSpeed: animationSpeedAttr === undefined ? Default.animationSpeed : Number(animationSpeedAttr)
@@ -435,6 +436,14 @@
                 }
             });
         });
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * Data Api implementation
+     * ------------------------------------------------------------------------
+     */
+    onDOMContentLoaded(() => {
+        initTreeview();
     });
 
     /**
@@ -478,14 +487,12 @@
         }
     }
     /**
-     *
-     * Data Api implementation
-     * ====================================================
+     * Initialization method
      */
-    onDOMContentLoaded(() => {
+    function initDirectChat() {
         const button = document.querySelectorAll(SELECTOR_DATA_TOGGLE);
-        button.forEach(btn => {
-            btn.addEventListener('click', event => {
+        button.forEach((btn) => {
+            btn.addEventListener('click', (event) => {
                 event.preventDefault();
                 const target = event.target;
                 const chatPane = target.closest(SELECTOR_DIRECT_CHAT);
@@ -495,6 +502,14 @@
                 }
             });
         });
+    }
+    /**
+     *
+     * Data Api implementation
+     * ====================================================
+     */
+    onDOMContentLoaded(() => {
+        initDirectChat();
     });
 
     /**
@@ -564,13 +579,12 @@
         }
     }
     /**
-     * Data Api implementation
-     * ============================================================================
+     * Initialization method
      */
-    onDOMContentLoaded(() => {
+    function initFullScreen() {
         const buttons = document.querySelectorAll(SELECTOR_FULLSCREEN_TOGGLE);
-        buttons.forEach(btn => {
-            btn.addEventListener('click', event => {
+        buttons.forEach((btn) => {
+            btn.addEventListener('click', (event) => {
                 event.preventDefault();
                 const target = event.target;
                 const button = target.closest(SELECTOR_FULLSCREEN_TOGGLE);
@@ -580,6 +594,13 @@
                 }
             });
         });
+    }
+    /**
+     * Data Api implementation
+     * ============================================================================
+     */
+    onDOMContentLoaded(() => {
+        initFullScreen();
     });
 
     /**
@@ -657,23 +678,31 @@
             const sidebarExpandList = document.querySelector(SELECTOR_SIDEBAR_EXPAND)?.classList ?? [];
             const sidebarExpand = Array.from(sidebarExpandList).find(className => className.startsWith(CLASS_NAME_SIDEBAR_EXPAND)) ?? '';
             const sidebar = document.getElementsByClassName(sidebarExpand)[0];
-            const sidebarContent = globalThis.getComputedStyle(sidebar, '::before').getPropertyValue('content');
-            this._config = { ...this._config, sidebarBreakpoint: Number(sidebarContent.replace(/[^\d.-]/g, '')) };
-            // FIXED: Don't auto-collapse on mobile if sidebar is currently open
-            // This prevents resize events (triggered by scrolling) from closing the sidebar
-            const isCurrentlyOpen = document.body.classList.contains(CLASS_NAME_SIDEBAR_OPEN);
-            if (window.innerWidth <= this._config.sidebarBreakpoint) {
-                // Only collapse if not currently open (prevents scroll-triggered closes)
-                if (!isCurrentlyOpen) {
-                    this.collapse();
+            if (sidebar) {
+                const sidebarContent = globalThis
+                    .getComputedStyle(sidebar, '::before')
+                    .getPropertyValue('content');
+                this._config = {
+                    ...this._config,
+                    sidebarBreakpoint: Number(sidebarContent.replace(/[^\d.-]/g, ''))
+                };
+                // FIXED: Don't auto-collapse on mobile if sidebar is currently open
+                // This prevents resize events (triggered by scrolling) from closing the sidebar
+                const isCurrentlyOpen = document.body.classList.contains(CLASS_NAME_SIDEBAR_OPEN);
+                if (window.innerWidth <= this._config.sidebarBreakpoint) {
+                    // Only collapse if not currently open (prevents scroll-triggered closes)
+                    if (!isCurrentlyOpen) {
+                        this.collapse();
+                    }
                 }
-            }
-            else {
-                if (!document.body.classList.contains(CLASS_NAME_SIDEBAR_MINI)) {
-                    this.expand();
-                }
-                if (document.body.classList.contains(CLASS_NAME_SIDEBAR_MINI) && document.body.classList.contains(CLASS_NAME_SIDEBAR_COLLAPSE)) {
-                    this.collapse();
+                else {
+                    if (!document.body.classList.contains(CLASS_NAME_SIDEBAR_MINI)) {
+                        this.expand();
+                    }
+                    if (document.body.classList.contains(CLASS_NAME_SIDEBAR_MINI) &&
+                        document.body.classList.contains(CLASS_NAME_SIDEBAR_COLLAPSE)) {
+                        this.collapse();
+                    }
                 }
             }
         }
@@ -743,11 +772,9 @@
         }
     }
     /**
-     * ------------------------------------------------------------------------
-     * Data Api implementation
-     * ------------------------------------------------------------------------
+     * Initialization method
      */
-    onDOMContentLoaded(() => {
+    function initPushMenu() {
         const sidebar = document?.querySelector(SELECTOR_APP_SIDEBAR);
         if (sidebar) {
             const data = new PushMenu(sidebar, Defaults);
@@ -767,7 +794,7 @@
         sidebarOverlay.addEventListener('touchmove', () => {
             overlayTouchMoved = true;
         }, { passive: true });
-        sidebarOverlay.addEventListener('touchend', event => {
+        sidebarOverlay.addEventListener('touchend', (event) => {
             if (!overlayTouchMoved) {
                 event.preventDefault();
                 const target = event.currentTarget;
@@ -776,15 +803,15 @@
             }
             overlayTouchMoved = false;
         }, { passive: false });
-        sidebarOverlay.addEventListener('click', event => {
+        sidebarOverlay.addEventListener('click', (event) => {
             event.preventDefault();
             const target = event.currentTarget;
             const data = new PushMenu(target, Defaults);
             data.collapse();
         });
         const fullBtn = document.querySelectorAll(SELECTOR_SIDEBAR_TOGGLE);
-        fullBtn.forEach(btn => {
-            btn.addEventListener('click', event => {
+        fullBtn.forEach((btn) => {
+            btn.addEventListener('click', (event) => {
                 event.preventDefault();
                 let button = event.currentTarget;
                 if (button?.dataset.lteToggle !== 'sidebar') {
@@ -797,6 +824,14 @@
                 }
             });
         });
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * Data Api implementation
+     * ------------------------------------------------------------------------
+     */
+    onDOMContentLoaded(() => {
+        initPushMenu();
     });
 
     /**
@@ -1255,6 +1290,11 @@
     exports.PushMenu = PushMenu;
     exports.Treeview = Treeview;
     exports.initAccessibility = initAccessibility;
+    exports.initCardWidget = initCardWidget;
+    exports.initDirectChat = initDirectChat;
+    exports.initFullScreen = initFullScreen;
+    exports.initPushMenu = initPushMenu;
+    exports.initTreeview = initTreeview;
 
 }));
 //# sourceMappingURL=adminlte.js.map
