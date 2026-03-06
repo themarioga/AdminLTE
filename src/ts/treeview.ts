@@ -115,7 +115,7 @@ export function initTreeview(): void {
   openMenuItems.forEach((menuItem) => {
     const childElement = menuItem.querySelector(SELECTOR_TREEVIEW_MENU) as HTMLElement | undefined;
     if (childElement) {
-      slideDown(childElement, 0);
+      slideDown(childElement, Default.animationSpeed);
       const event = new Event(EVENT_LOAD_DATA_API);
       menuItem.dispatchEvent(event);
     }
@@ -148,7 +148,7 @@ export function initTreeview(): void {
         const config: Config = {
           accordion: accordionAttr === undefined ? Default.accordion : accordionAttr === 'true',
           animationSpeed:
-            animationSpeedAttr === undefined ? Default.animationSpeed : Number(animationSpeedAttr)
+            animationSpeedAttr === undefined || Number(animationSpeedAttr) <= 1 ? Default.animationSpeed : Number(animationSpeedAttr)
         };
 
         const data = new Treeview(targetItem, config);
