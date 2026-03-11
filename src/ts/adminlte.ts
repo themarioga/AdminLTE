@@ -13,20 +13,13 @@ import { initPushMenu } from './push-menu.js';
 import { initAccessibility } from './accessibility.js'
 
 /**
- * AdminLTE v4.0.0-rc5
+ * AdminLTE v4.0.0-rc7
  * Author: Colorlib
  * Website: AdminLTE.io <https://adminlte.io>
  * License: Open source - MIT <https://opensource.org/licenses/MIT>
  */
 
 onDOMContentLoaded(() => {
-  /**
-   * Initialize AdminLTE Core Components
-   * -------------------------------
-   */
-  const layout = new Layout(document.body)
-  layout.holdTransition()
-
   /**
    * Initialize Accessibility Features - WCAG 2.1 AA Compliance
    * --------------------------------------------------------
@@ -41,11 +34,6 @@ onDOMContentLoaded(() => {
 
   // Add semantic landmarks
   accessibilityManager.addLandmarks()
-
-  // Mark app as loaded after initialization
-  setTimeout(() => {
-    document.body.classList.add('app-loaded')
-  }, 400)
 })
 
 export {
