@@ -255,10 +255,10 @@
             this.maximize();
         }
     }
-    onDOMContentLoaded(() => {
+    function initCardWidget() {
         const collapseBtn = document.querySelectorAll(SELECTOR_DATA_COLLAPSE);
-        collapseBtn.forEach(btn => {
-            btn.addEventListener('click', event => {
+        collapseBtn.forEach((btn) => {
+            btn.addEventListener('click', (event) => {
                 event.preventDefault();
                 const target = event.target;
                 const data = new CardWidget(target, Default$1);
@@ -266,8 +266,8 @@
             });
         });
         const removeBtn = document.querySelectorAll(SELECTOR_DATA_REMOVE);
-        removeBtn.forEach(btn => {
-            btn.addEventListener('click', event => {
+        removeBtn.forEach((btn) => {
+            btn.addEventListener('click', (event) => {
                 event.preventDefault();
                 const target = event.target;
                 const data = new CardWidget(target, Default$1);
@@ -275,14 +275,17 @@
             });
         });
         const maxBtn = document.querySelectorAll(SELECTOR_DATA_MAXIMIZE);
-        maxBtn.forEach(btn => {
-            btn.addEventListener('click', event => {
+        maxBtn.forEach((btn) => {
+            btn.addEventListener('click', (event) => {
                 event.preventDefault();
                 const target = event.target;
                 const data = new CardWidget(target, Default$1);
                 data.toggleMaximize();
             });
         });
+    }
+    onDOMContentLoaded(() => {
+        initCardWidget();
     });
 
     const DATA_KEY$3 = 'lte.treeview';
@@ -345,19 +348,19 @@
             }
         }
     }
-    onDOMContentLoaded(() => {
+    function initTreeview() {
         const openMenuItems = document.querySelectorAll(`${SELECTOR_NAV_ITEM}.${CLASS_NAME_MENU_OPEN}`);
-        openMenuItems.forEach(menuItem => {
+        openMenuItems.forEach((menuItem) => {
             const childElement = menuItem.querySelector(SELECTOR_TREEVIEW_MENU);
             if (childElement) {
-                slideDown(childElement, 0);
+                slideDown(childElement, Default.animationSpeed);
                 const event = new Event(EVENT_LOAD_DATA_API);
                 menuItem.dispatchEvent(event);
             }
         });
         const button = document.querySelectorAll(SELECTOR_DATA_TOGGLE$1);
-        button.forEach(btn => {
-            btn.addEventListener('click', event => {
+        button.forEach((btn) => {
+            btn.addEventListener('click', (event) => {
                 const target = event.target;
                 const targetItem = target.closest(SELECTOR_NAV_ITEM);
                 const targetLink = target.closest(SELECTOR_NAV_LINK);
@@ -374,13 +377,16 @@
                     const animationSpeedAttr = lteToggleElement.dataset.animationSpeed;
                     const config = {
                         accordion: accordionAttr === undefined ? Default.accordion : accordionAttr === 'true',
-                        animationSpeed: animationSpeedAttr === undefined ? Default.animationSpeed : Number(animationSpeedAttr)
+                        animationSpeed: animationSpeedAttr === undefined || Number(animationSpeedAttr) <= 1 ? Default.animationSpeed : Number(animationSpeedAttr)
                     };
                     const data = new Treeview(targetItem, config);
                     data.toggle();
                 }
             });
         });
+    }
+    onDOMContentLoaded(() => {
+        initTreeview();
     });
 
     const DATA_KEY$2 = 'lte.direct-chat';
@@ -408,10 +414,10 @@
             }
         }
     }
-    onDOMContentLoaded(() => {
+    function initDirectChat() {
         const button = document.querySelectorAll(SELECTOR_DATA_TOGGLE);
-        button.forEach(btn => {
-            btn.addEventListener('click', event => {
+        button.forEach((btn) => {
+            btn.addEventListener('click', (event) => {
                 event.preventDefault();
                 const target = event.target;
                 const chatPane = target.closest(SELECTOR_DIRECT_CHAT);
@@ -421,6 +427,9 @@
                 }
             });
         });
+    }
+    onDOMContentLoaded(() => {
+        initDirectChat();
     });
 
     const DATA_KEY$1 = 'lte.fullscreen';
@@ -474,10 +483,10 @@
             }
         }
     }
-    onDOMContentLoaded(() => {
+    function initFullScreen() {
         const buttons = document.querySelectorAll(SELECTOR_FULLSCREEN_TOGGLE);
-        buttons.forEach(btn => {
-            btn.addEventListener('click', event => {
+        buttons.forEach((btn) => {
+            btn.addEventListener('click', (event) => {
                 event.preventDefault();
                 const target = event.target;
                 const button = target.closest(SELECTOR_FULLSCREEN_TOGGLE);
@@ -487,6 +496,9 @@
                 }
             });
         });
+    }
+    onDOMContentLoaded(() => {
+        initFullScreen();
     });
 
     const DATA_KEY = 'lte.push-menu';
@@ -555,7 +567,8 @@
             if (!sidebarExpand) {
                 return;
             }
-            const content = globalThis.getComputedStyle(sidebarExpand, '::before')
+            const content = globalThis
+                .getComputedStyle(sidebarExpand, '::before')
                 .getPropertyValue('content');
             if (!content || content === 'none') {
                 return;
@@ -631,7 +644,7 @@
             }
         }
     }
-    onDOMContentLoaded(() => {
+    function initPushMenu() {
         const sidebar = document?.querySelector(SELECTOR_APP_SIDEBAR);
         if (!sidebar) {
             return;
@@ -639,12 +652,8 @@
         const sidebarBreakpointAttr = sidebar.dataset.sidebarBreakpoint;
         const enablePersistenceAttr = sidebar.dataset.enablePersistence;
         const config = {
-            sidebarBreakpoint: sidebarBreakpointAttr === undefined ?
-                Defaults.sidebarBreakpoint :
-                Number(sidebarBreakpointAttr),
-            enablePersistence: enablePersistenceAttr === undefined ?
-                Defaults.enablePersistence :
-                enablePersistenceAttr === 'true'
+            sidebarBreakpoint: sidebarBreakpointAttr === undefined ? Defaults.sidebarBreakpoint : Number(sidebarBreakpointAttr),
+            enablePersistence: enablePersistenceAttr === undefined ? Defaults.enablePersistence : enablePersistenceAttr === 'true'
         };
         const pushMenu = new PushMenu(sidebar, config);
         pushMenu.init();
@@ -662,20 +671,20 @@
         sidebarOverlay.addEventListener('touchmove', () => {
             overlayTouchMoved = true;
         }, { passive: true });
-        sidebarOverlay.addEventListener('touchend', event => {
+        sidebarOverlay.addEventListener('touchend', (event) => {
             if (!overlayTouchMoved) {
                 event.preventDefault();
                 pushMenu.collapse();
             }
             overlayTouchMoved = false;
         }, { passive: false });
-        sidebarOverlay.addEventListener('click', event => {
+        sidebarOverlay.addEventListener('click', (event) => {
             event.preventDefault();
             pushMenu.collapse();
         });
         const fullBtn = document.querySelectorAll(SELECTOR_SIDEBAR_TOGGLE);
-        fullBtn.forEach(btn => {
-            btn.addEventListener('click', event => {
+        fullBtn.forEach((btn) => {
+            btn.addEventListener('click', (event) => {
                 event.preventDefault();
                 let button = event.currentTarget;
                 if (button?.dataset.lteToggle !== 'sidebar') {
@@ -687,6 +696,9 @@
                 }
             });
         });
+    }
+    onDOMContentLoaded(() => {
+        initPushMenu();
     });
 
     class AccessibilityManager {
@@ -1076,6 +1088,11 @@
     exports.PushMenu = PushMenu;
     exports.Treeview = Treeview;
     exports.initAccessibility = initAccessibility;
+    exports.initCardWidget = initCardWidget;
+    exports.initDirectChat = initDirectChat;
+    exports.initFullScreen = initFullScreen;
+    exports.initPushMenu = initPushMenu;
+    exports.initTreeview = initTreeview;
 
 }));
 //# sourceMappingURL=adminlte.js.map
